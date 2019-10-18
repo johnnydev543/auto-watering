@@ -1,12 +1,12 @@
 #include <Arduino.h>
 
-const int floatSwtichPin = 5; // should have 10k pull-up resistor
+const int floatSwtichPin = 4; // should have 10k pull-up resistor
 const int moistureSwitchPin = 13; // should have 10k pull-down resistor
 const int waterPumpPin = 14; // should have current limiting resistor, pull-down resistor
 int delaySec = 10;
 int delayCount = 0;
 int forceStopSec = 120;
-long sleepTime = 30e6;
+long sleepTime = 30;
 
 void setup()
 {
@@ -52,9 +52,13 @@ void loop()
       needWatering = true;
     }
   }
+  else
+  {
+    Serial.println("Water is not avaiable.");
+  }
 
   // force stop if watering time is more than X seconds
-  // in case the moisture sensor out of control.
+  // in case the moisture sensor or something else out of control.
   if(delaySec*delayCount > forceStopSec)
   {
     Serial.println("Force stop watering");
@@ -63,14 +67,14 @@ void loop()
 
   if(needWatering == true)
   {
-    Serial.println("Start pumping");
 
     // water pump on
     digitalWrite(waterPumpPin, HIGH);
 
-    Serial.print("Delay ");
+    Serial.print("Pumping for ");
+    // Serial.print("Delay ");
     Serial.print(delaySec);
-    Serial.print("seconds");
+    Serial.print(" seconds");
     Serial.println();
 
     // delay milli seconds
@@ -81,13 +85,18 @@ void loop()
   else
   {
 
-    Serial.println("Stop pumping, or no need watering.");
+    Serial.println("No pumping");
 
     // close water pump whether it's on or not
     digitalWrite(waterPumpPin, LOW);
 
+    Serial.print("Deep sleep for ");
+    Serial.print(sleepTime);
+    Serial.print(" seconds");
+    Serial.println();
+
     // into deep sleep mode
-    ESP.deepSleep(sleepTime);
+    ESP.deepSleep(sleepTime*1e6);
   }
 
 }
