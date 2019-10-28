@@ -1,12 +1,12 @@
 #include <Arduino.h>
 
-const int floatSwtichPin = 4; // should have 10k pull-up resistor
-const int moistureSwitchPin = 13; // should have 10k pull-down resistor
+const int moistureSwitchPin = 12; // should have 10k pull-down resistor
+const int floatSwtichPin = 13; // should have 10k pull-up resistor
 const int waterPumpPin = 14; // should have current limiting resistor, pull-down resistor
-int delaySec = 10;
+int delaySec = 10; // seconds
 int delayCount = 0;
-int forceStopSec = 120;
-long sleepTime = 30;
+int forceStopSec = 120; // seconds
+int sleepTimeSec = 30; // seconds
 
 void setup()
 {
@@ -91,12 +91,12 @@ void loop()
     digitalWrite(waterPumpPin, LOW);
 
     Serial.print("Deep sleep for ");
-    Serial.print(sleepTime);
+    Serial.print(sleepTimeSec);
     Serial.print(" seconds");
     Serial.println();
 
     // into deep sleep mode
-    ESP.deepSleep(sleepTime*1e6);
+    ESP.deepSleep(sleepTimeSec*1e6);
   }
 
 }
