@@ -1,7 +1,8 @@
 #include <Arduino.h>
 
-const int moistureSwitchPin = 12; // should have 10k pull-down resistor
-const int floatSwtichPin = 13; // should have 10k pull-up resistor
+const int floatSwtichPin = 5; // should have 10k pull-up resistor
+const int moistureReadPin = 4; // should have 10k pull-up resistor
+const int moistureOnPin = 13; // should have 10k pull-down resistor
 const int waterPumpPin = 14; // should have current limiting resistor, pull-down resistor
 int delaySec = 10; // seconds
 int delayCount = 0;
@@ -12,13 +13,13 @@ void setup()
 {
   Serial.begin(115200);
   pinMode(floatSwtichPin, INPUT);
-  pinMode(moistureSwitchPin, OUTPUT);
+  pinMode(moistureReadPin, INPUT);
+  pinMode(moistureOnPin, OUTPUT);
   pinMode(waterPumpPin, OUTPUT);
 }
 
 void loop()
 {
-  int moistureValue = 0;
   bool needWatering = false;
 
   // Read the water level switch to see if water is avaiable
@@ -31,23 +32,23 @@ void loop()
     Serial.println("Water is avaiable.");
 
     // Power on moisture sensor
-    digitalWrite(moistureSwitchPin, HIGH);
+    digitalWrite(moistureOnPin, HIGH);
     
-    // make sure the sensor will have time to turn on
+    // milli seconds, make sure the sensor will have time to turn on
     delay(10);
 
     // read soil moisture value
-    moistureValue = analogRead(A0);
+    bool moistureRead = digitalRead(moistureReadPin);
 
     // Power off moisture sensor
-    digitalWrite(moistureSwitchPin, LOW);
+    digitalWrite(moistureOnPin, LOW);
 
     Serial.println("Starting moisture measurement.");
-    Serial.print("Analog value:");
-    Serial.print(moistureValue);
+    Serial.print("Moisture logic level:");
+    Serial.print(moistureRead);
     Serial.println();
 
-    if(moistureValue > 800)
+    if(moistureRead == LOW)
     {
       needWatering = true;
     }
