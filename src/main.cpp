@@ -25,6 +25,8 @@ void loop()
   // Read the water level switch to see if water is avaiable
   bool floatSwitch = digitalRead(floatSwtichPin);
 
+  Serial.println();
+
   // float switch == low means has water
   if(floatSwitch == LOW)
   {
@@ -35,10 +37,10 @@ void loop()
     digitalWrite(moistureOnPin, HIGH);
     
     // milli seconds, make sure the sensor will have time to turn on
-    delay(10);
+    delay(20);
 
     // read soil moisture value
-    bool moistureRead = digitalRead(moistureReadPin);
+    int moistureRead = digitalRead(moistureReadPin);
 
     // Power off moisture sensor
     digitalWrite(moistureOnPin, LOW);
@@ -48,7 +50,7 @@ void loop()
     Serial.print(moistureRead);
     Serial.println();
 
-    if(moistureRead == LOW)
+    if(moistureRead == HIGH)
     {
       needWatering = true;
     }
