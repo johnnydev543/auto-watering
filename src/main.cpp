@@ -7,7 +7,7 @@ const int waterPumpPin = 14;   // should have current limiting resistor, pull-do
 int delaySec = 10;             // seconds
 int delayCount = 0;
 int forceStopSec = 120; // seconds
-int sleepTimeSec = 30;  // seconds
+uint32_t sleepTimeSec = 86400;  // seconds
 
 void setup()
 {
